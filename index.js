@@ -7,12 +7,8 @@ const { ChatRouter } = require("./Routes/chat.route");
 const { MessageRouter } = require("./Routes/message.route");
 const { fileRouter } = require("./Routes/files.route");
 
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
+app.use(cors({ origin: '*' }));
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
