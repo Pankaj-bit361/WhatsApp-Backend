@@ -20,12 +20,12 @@ app.use("/chat", ChatRouter);
 app.use("/message", MessageRouter);
 app.use("/file", fileRouter);
 
-app.listen(process.env.port, async () => {
+app.listen(5000, async () => {
   try {
     await connection;
     console.log(`connected to db`);
   } catch (error) {
     console.log(error);
   }
-  console.log(`connected to port : ${process.env.port}`);
+  console.log(`connected to port : 5000`);
 });
