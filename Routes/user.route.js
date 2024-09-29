@@ -43,33 +43,50 @@ UserRouter.post("/", async (req, res) => {
 
 
 UserRouter.post("/google/login", async (req, res) => {
-    const { code, redirectUri } = req.body;
-  
-    try {
-      const response = await getLogin({ code, redirectUri });
-      const { email, accessToken } = response.data;
-  
-      let user = await UserModel.findOne({ email });
-  
-      if (!user) {
-        user = new UserModel(response.data);
-        await user.save();
-      }
-  
-      res.send(200).json({
-        success: true,
-        message: "Login successful",
-        accessToken,
-        user,
-      });
-    } catch (error) {
-      console.error("Error during login: ", error.message);
-      res.send({
+  const { code, redirectUri } = req.body;
+
+  if (!code || !redirectUri) {
+    return res.status(400).json({
+      success: false,
+      message: "Authorization code and redirect URI are required.",
+    });
+  }
+
+  try {
+    const response = await getLogin({ code, redirectUri });
+
+    if (!response.success) {
+      return res.status(400).json({
         success: false,
-        error: error.message,
+        message: response.message || "Login failed.",
       });
     }
-  });
+
+    const { email, accessToken } = response.data;
+
+    // Find or create user
+    let user = await UserModel.findOne({ email });
+
+    if (!user) {
+      user = new UserModel(response.data);
+      await user.save();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      accessToken,
+      user,
+    });
+  } catch (error) {
+    console.error("Error during login:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Server error during login process.",
+      error: error.message,
+    });
+  }
+});
 
 module.exports = {
   UserRouter,
