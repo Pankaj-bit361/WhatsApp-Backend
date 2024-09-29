@@ -1,6 +1,4 @@
 const axios = require("axios");
-const { config } = require("../common/config");
-const { UserModel } = require("../Models/user.model");
 
 const getLogin = async ({ code, redirectUri }) => {
   try {
