@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 app.use("/users", UserRouter);
 app.use("/chat", ChatRouter);
 app.use("/message", MessageRouter);
-app.use("/file", fileRouter);
+// app.use("/file", fileRouter);
 
 app.listen(port = process.env.PORT || 8500, async () => {
   try {
